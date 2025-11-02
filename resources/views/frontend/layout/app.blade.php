@@ -1,7 +1,5 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 
 <head>
     @include('frontend.includes.header')
@@ -9,21 +7,15 @@
     @livewireStyles
 </head>
 
-<body class="common-home">
-    {{-- cart btn --}}
-    @if( !request()->routeIs('cart') && !request()->routeIs('checkout') )
-        {{-- <livewire:frontend.cart.btnshopping /> --}}
-    @endif
+<body>
+    @include('frontend.includes.menu')
 
-    <div class="">
-         @include('frontend.includes.menu')
+    <!-- body content -->
+    @yield('body-content')
 
-        <!-- body content -->
-        @yield('body-content')
+    @include('frontend.includes.footer')
+    @include('frontend.includes.cart-sidebar')
 
-        @include('frontend.includes.footer')
-        @include('frontend.includes.cart-sidebar')
-    </div>
 
     @include('frontend.includes.script')
 

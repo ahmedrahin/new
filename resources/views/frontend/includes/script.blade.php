@@ -1,12 +1,19 @@
-
-<script src="{{asset('frontend/js/jquery-3.6.0.min.js')}}"></script>
-<script src="{{ asset('frontend/js/theme.js') }}"></script>
-<script src="{{ asset('frontend/js/toastify.js') }}"></script>
-<script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('frontend/js/jquery.min.js') }}"></script>
+<script src="{{ asset('frontend/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('frontend/js/swiper-bundle.min.js') }}"></script>
+{{-- <script src="{{ asset('frontend/js/carousel.js') }}"></script> --}}
+<script src="{{ asset('frontend/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('frontend/js/lazysize.min.js') }}"></script>
+<script src="{{ asset('frontend/js/wow.min.js') }}"></script>
+<script src="{{ asset('frontend/js/infinityslide.js') }}"></script>
+<script src="{{ asset('frontend/js/parallaxie.js') }}"></script>
+<script src="{{ asset('frontend/js/count-down.js') }}"></script>
+<script src="{{ asset('frontend/js/main.js') }}"></script>
+{{-- <script src="{{ asset('frontend/js/sibforms.js') }}" defer></script> --}}
 
 
 {{-- messages --}}
-@if (session('success') || session('error') || session('info') || session('warning'))
+{{-- @if (session('success') || session('error') || session('info') || session('warning'))
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let message =
@@ -168,19 +175,14 @@
     }
 </script>
 
-<script>
-     jQuery(function($) {
-        $('.material-icons').fadeIn(1000);
-    });
-</script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const searchBox = document.getElementById('search');
         const input = searchBox.querySelector('input[type="text"]');
 
         // Hide dropdown when clicking outside
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('searchDropdown');
             if (dropdown && !searchBox.contains(event.target)) {
                 dropdown.style.display = 'none';
@@ -188,7 +190,7 @@
         });
 
         // Show dropdown on input focus (if it has value)
-        input.addEventListener('focus', function () {
+        input.addEventListener('focus', function() {
             const dropdown = document.getElementById('searchDropdown');
             if (dropdown && input.value.trim() !== '') {
                 dropdown.style.display = 'block';
@@ -196,7 +198,7 @@
         });
 
         // Show/hide dropdown on typing
-        input.addEventListener('input', function () {
+        input.addEventListener('input', function() {
             const dropdown = document.getElementById('searchDropdown');
             if (!dropdown) return;
 
@@ -207,9 +209,7 @@
             }
         });
     });
-</script>
-
-
+</script> --}}
 
 @yield('page-script')
 @yield('addcart-js')
