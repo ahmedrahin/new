@@ -14924,7 +14924,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
   align-items: center;
   flex-wrap: wrap;
   gap: 10px 20px;
-  margin-bottom: 48px;
+  /* margin-bottom: 48px; */
 }
 .meta-filter-shop #applied-filters {
   display: flex;

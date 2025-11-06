@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="{{ asset('frontend/css/swiper-bundle.min.css') }}">
 <link rel="stylesheet" href="{{ asset('frontend/css/animate.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/styles.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/custom.css') }}">
 
 @yield('page-css')
 @stack('css')

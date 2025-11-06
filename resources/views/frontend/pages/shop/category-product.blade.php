@@ -86,7 +86,7 @@
                     </div>
 
                     <div id="product-list">
-                        @include('frontend.pages.shop.category-product-list')
+                        @include('frontend.pages.shop.product-list')
                     </div>
 
                 </div>

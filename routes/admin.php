@@ -83,12 +83,12 @@ Route::middleware(['isAdmin'])->group(function () {
     Route::name('product-management.')->group(function () {
         Route::controller(ProductController::class)->group(function () {
             // Apply middleware for permissions
-            Route::get('/all-product', 'index')->name('index')->middleware('can:all product');
+            Route::get('/all-product', 'index')->name('index');
             Route::get('/create-product', 'create')->name('create');
             Route::post('/store-product', 'store')->name('store');
-            Route::get('/product-edit/{id}', [ProductEditController::class, 'edit'])->name('edit')->middleware('can:update product');
-            Route::post('/product-update/{id}', [ProductEditController::class, 'update'])->name('update')->middleware('can:update product');
-            Route::get('/product-details/{id}', 'show')->name('show')->middleware('can:all product');
+            Route::get('/product-edit/{id}', [ProductEditController::class, 'edit'])->name('edit');
+            Route::post('/product-update/{id}', [ProductEditController::class, 'update'])->name('update');
+            Route::get('/product-details/{id}', 'show')->name('show');
 
             // API for categories (without middleware, as they might be public)
             Route::get('/get-brand/{category_id}', [BrandController::class, 'getBrand']);

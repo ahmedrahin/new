@@ -1,100 +1,120 @@
-@section('page-css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" />
-@endsection
 
-
-<column id="column-left" class="col-sm-3">
-    <span class="lc-close"><i class="material-icons" aria-hidden="true">close</i></span>
-    <div class="filters">
-        <div class="price-filter ws-box">
-            <div class="label">
-                <span>Price Range</span>
-            </div>
-            <div id="rang-slider" class="noUi-horizontal" data-from="{{ $from ?? 0 }}" data-to="{{ $to ?? 500000 }}"
-                data-min="0" data-max="{{ 500000 }}">
-            </div>
-
-            <div class="range-label from">
-                <input type="text" id="range-from" name="from" value="{{ $from ?? 0 }}">
-            </div>
-
-            <div class="range-label to">
-                <input type="text" id="range-to" name="to" value="{{ $to ?? 500000 }}">
-            </div>
+<div class="canvas-sidebar sidebar-filter canvas-filter left">
+    <div class="canvas-wrapper">
+        <div class="canvas-header d-xl-none">
+            <span class="title h3 fw-medium">Filter</span>
+            <span class="icon-close link icon-close-popup fs-24 close-filter"></span>
         </div>
-
-        <!-- Availability -->
-        {{-- <div class="filter-group ws-box show">
-            <div class="label"><span>Availability</span></div>
-            <div class="items">
-                <label class="filter">
-                    <input type="checkbox" name="filter[]" value="status:7" />
-                    <span>In Stock</span>
-                </label>
-                <label class="filter">
-                    <input type="checkbox" name="filter[]" value="status:6" />
-                    <span>Pre Order</span>
-                </label>
-            </div>
-        </div> --}}
-
-        @php
-            $brandsQuery = App\Models\Brand::where('category_id', $category->id)->where('status', 1);
-
-            if (isset($parentCategory)) {
-                $brandsQuery->orWhere('category_id', $parentCategory->id);
-            }
-
-            $brands = $brandsQuery->get();
-        @endphp
-
-        {{-- Brand Filter --}}
-        @if ($brands->count() > 0)
-            <div class="filter-group ws-box show">
-                <div class="label"><span>Brand</span></div>
-                <div class="items">
-                    @foreach ($brands as $brand)
-                        @php
-                            $isChecked =
-                                request()->filled('filter') && in_array("brand:$brand->id", request()->filter ?? []);
-                        @endphp
-                        <label class="filter">
-                            <input type="checkbox" name="filter[]" value="brand:{{ $brand->id }}"
-                                {{ $isChecked ? 'checked' : '' }} />
-                            <span>{{ $brand->name }}</span>
-                        </label>
-                    @endforeach
+        <div class="canvas-body">
+            <div class="widget-facet">
+                <div class="facet-title" data-bs-target="#category" role="button" data-bs-toggle="collapse"
+                    aria-expanded="true" aria-controls="category">
+                    <span class="h4 fw-semibold">Category</span>
+                    <span class="icon icon-caret-down fs-20"></span>
+                </div>
+                <div id="category" class="collapse show">
+                    <ul class="collapse-body filter-group-check group-category">
+                        <li class="list-item">
+                            <a href="shop-default.html" class="link h6">T-shirts<span class="count">23</span></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="shop-default.html" class="link h6">Footwear<span class="count">44</span></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="shop-default.html" class="link h6">Shirts<span class="count">75</span></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="shop-default.html" class="link h6">Dresses<span class="count">33</span></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="shop-default.html" class="link h6">Underwear<span class="count">45</span></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="shop-default.html" class="link h6">Accessories<span class="count">32</span></a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        @endif
-
-        {{-- Dynamic Filters --}}
-        @foreach ($filters as $filter)
-            <div class="filter-group ws-box show">
-                <div class="label"><span>{{ $filter->option_name }}</span></div>
-                <div class="items">
-                    @foreach ($filter->values as $value)
-                        @php
-                            $filterKey = $filter->id . ':' . $value->id;
-                            $isChecked = request()->filled('filter') && in_array($filterKey, request()->filter ?? []);
-                        @endphp
-                        <label class="filter">
-                            <input type="checkbox" name="filter[]" value="{{ $filterKey }}"
-                                {{ $isChecked ? 'checked' : '' }} />
-                            <span>{{ $value->option_value }}</span>
-                        </label>
-                    @endforeach
+            <div class="widget-facet">
+                <div class="facet-title" data-bs-target="#price" role="button" data-bs-toggle="collapse" aria-expanded="true"
+                    aria-controls="price">
+                    <span class="h4 fw-semibold">Price</span>
+                    <span class="icon icon-caret-down fs-20"></span>
+                </div>
+                <div id="price" class="collapse show">
+                    <div class="collapse-body widget-price filter-price">
+                        <div class="price-val-range" id="price-value-range" data-min="0" data-max="5000"></div>
+                        <div class="box-value-price">
+                            <span class="h6 text-main">Price:</span>
+                            <div class="price-box">
+                                <div class="price-val" id="price-min-value" data-currency="$"></div>
+                                <span>-</span>
+                                <div class="price-val" id="price-max-value" data-currency="$"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        @endforeach
-
-
+            <div class="widget-facet">
+                <div class="facet-title" data-bs-target="#brand" role="button" data-bs-toggle="collapse" aria-expanded="true"
+                    aria-controls="brand">
+                    <span class="h4 fw-semibold">Brand</span>
+                    <span class="icon icon-caret-down fs-20"></span>
+                </div>
+                <div id="brand" class="collapse show">
+                    <ul class="collapse-body filter-group-check current-scrollbar">
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="automet">
+                            <label for="automet" class="label">AUTOMET</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="trendy-queen">
+                            <label for="trendy-queen" class="label">Trendy Queen</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="wiholl">
+                            <label for="wiholl" class="label">WIHOLL</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="real-essentials">
+                            <label for="real-essentials" class="label">Real Essentials</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="dokotoo">
+                            <label for="dokotoo" class="label">Dokotoo</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="hanes">
+                            <label for="hanes" class="label">Hanes</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="zeagoo">
+                            <label for="zeagoo" class="label">Zeagoo</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="shewin">
+                            <label for="shewin" class="label">SHEWIN</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="blooming-jelly">
+                            <label for="blooming-jelly" class="label">Blooming Jelly</label>
+                        </li>
+                        <li class="list-item">
+                            <input type="checkbox" name="brand" class="tf-check" id="fisoew">
+                            <label for="fisoew" class="label">Fisoew</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        <div class="canvas-bottom d-xl-none">
+            <button id="reset-filter" class="tf-btn btn-reset">Reset Filters</button>
+        </div>
     </div>
-</column>
+</div>
 
-
-@section('page-script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+@push('scripts')
 
     <script>
         jQuery(function($) {
@@ -135,8 +155,6 @@
             function loadProducts(customUrl = null) {
                 let url = customUrl || (window.location.pathname + '?' + getFilters());
 
-                console.log("AJAX URL => ", url); // Debugging
-
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -144,18 +162,18 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     beforeSend: function() {
-                        $('#product-list').addClass('loading');
+                        $('#gridLayout').addClass('loading');
                         $('#ajax-loader').show();
                     },
                     success: function(data) {
-                        $('#product-list').html(data);
+                        $('#gridLayout').html(data);
                         if (typeof Livewire !== "undefined") {
                             Livewire.rescan();
                         }
                         history.pushState(null, '', url);
                     },
                     complete: function() {
-                        $('#product-list').removeClass('loading');
+                        $('#gridLayout').removeClass('loading');
                         $('#ajax-loader').hide();
                     },
                     error: function(xhr) {
@@ -174,7 +192,7 @@
                 loadProducts();
             });
 
-            $(document).on('click', '#product-list .pagination a', function(e) {
+            $(document).on('click', '#gridLayout .wg-pagination a', function(e) {
                 e.preventDefault();
                 let url = $(this).attr('href');
                 loadProducts(url);
@@ -188,7 +206,7 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(data) {
-                        $('#product-list').html(data);
+                        $('#gridLayout').html(data);
                         if (typeof Livewire !== "undefined") {
                             Livewire.rescan();
                         }
@@ -198,8 +216,6 @@
 
         });
     </script>
-
-
 
     <script>
         jQuery(function($) {
@@ -278,16 +294,16 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     beforeSend: function() {
-                        $('#product-list').addClass('loading');
+                        $('#gridLayout').addClass('loading');
                         $('#ajax-loader').show();
                     },
                     success: function(data) {
-                        $('#product-list').html(data);
+                        $('#gridLayout').html(data);
                         Livewire.rescan();
                         history.pushState(null, '', url);
                     },
                     complete: function() {
-                        $('#product-list').removeClass('loading');
+                        $('#gridLayout').removeClass('loading');
                         $('#ajax-loader').hide();
                     },
                     error: function() {
@@ -305,4 +321,5 @@
             });
         });
     </script>
-@endsection
+    
+@endpush
