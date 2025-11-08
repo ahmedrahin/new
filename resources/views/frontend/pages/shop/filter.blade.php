@@ -14,7 +14,8 @@
                 </div>
                 <div id="category" class="collapse show">
                     @php
-                        $categories = App\Models\Category::with(['subcategories.subsubcategories'])->where('status', 1)->where('featured',1)->get();
+                        $categories = App\Models\Category::with(['subcategories.subsubcategories'])->where('status', 1)->get();
+                        $currentSlug = request()->segment(count(request()->segments()));
                     @endphp
                     <ul class="collapse-body filter-group-check group-category">
                         @foreach ($categories as $category)
@@ -46,7 +47,6 @@
                                                     @endif
                                                 </a>
 
-                                                {{-- 🔵 SubSubcategories --}}
                                                 @if ($sub->subsubcategories->count() > 0)
                                                     <ul class="sub-sub-category">
                                                         @foreach ($sub->subsubcategories as $subsub)
@@ -83,7 +83,10 @@
                 </div>
                 <div id="price" class="collapse show">
                     <div class="collapse-body widget-price filter-price">
-                        <div class="price-val-range" id="price-value-range" data-min="0" data-max="5000"></div>
+                        <div id="rang-slider" class="price-val-range" data-from="{{ $from ?? 0 }}"
+                            data-to="{{ $to ?? 5000 }}" data-min="0" data-max="{{ 5000 }}">
+                        </div>
+                        
                         <div class="box-value-price">
                             <span class="h6 text-main">Price:</span>
                             <div class="price-box">
@@ -92,9 +95,23 @@
                                 <div class="price-val" id="price-max-value" data-currency="$"></div>
                             </div>
                         </div>
+
+                        <div class="collapse-body widget-price filter-price">
+                            
+                        <div class="price-filter ws-box">
+                            <div class="range-label from">
+                                <input type="text" id="range-from" name="from" value="{{ $from ?? 0 }}">
+                            </div>
+
+                            <div class="range-label to">
+                                <input type="text" id="range-to" name="to" value="{{ $to ?? 5000 }}">
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
+
             <div class="widget-facet">
                 <div class="facet-title" data-bs-target="#brand" role="button" data-bs-toggle="collapse" aria-expanded="true"
                     aria-controls="brand">
@@ -221,6 +238,7 @@
         });
     </script>
 
+    {{-- range filter --}}
     <script>
         jQuery(function($) {
             let slider = document.getElementById('rang-slider');

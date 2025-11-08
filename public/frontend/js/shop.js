@@ -4,8 +4,8 @@
     /* Range Two Price
   -------------------------------------------------------------------------------------*/
     var rangeTwoPrice = function() {
-        if ($("#price-value-range").length > 0) {
-            var skipSlider = document.getElementById("price-value-range");
+        if ($("#rang-slider").length > 0) {
+            var skipSlider = document.getElementById("rang-slider");
             var skipValues = [document.getElementById("price-min-value"), document.getElementById("price-max-value")];
 
             var min = parseInt(skipSlider.getAttribute("data-min"), 10) || 0;

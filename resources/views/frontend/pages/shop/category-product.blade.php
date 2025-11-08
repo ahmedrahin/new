@@ -14,6 +14,33 @@
             height: 100%;
             transform: translate(-50%, 95%);
         }
+        .group-category ul {
+            list-style: none;
+            margin: 0;
+            padding-left: 15px;
+        }
+
+        .group-category li {
+            position: relative;
+        }
+
+        .group-category .sub-category,
+        .group-category .sub-sub-category {
+            display: none;
+            padding-left: 15px;
+            border-left: 1px dashed #ddd;
+        }
+
+        .group-category li:hover > .sub-category,
+        .group-category li:hover > .sub-sub-category {
+            display: block;
+        }
+
+        .group-category li.active > a {
+            font-weight: 600;
+            color: var(--theme-color, #e63946);
+        }
+
     </style>
 @endsection
 

@@ -32,7 +32,7 @@ class ShopController extends Controller
 
         // Price range filter
         $from = $request->input('from', 0);
-        $to = $request->input('to', 500000);
+        $to = $request->input('to', 5000);
 
         if ($request->filled('filter_price')) {
             [$minPrice, $maxPrice] = explode('-', $request->filter_price);
