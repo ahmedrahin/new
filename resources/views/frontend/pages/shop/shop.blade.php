@@ -14,6 +14,19 @@
             height: 100%;
             transform: translate(-50%, 95%);
         }
+
+        #category .sub-category, #category .sub-sub-category {
+            padding-left: 20px;
+            margin: 10px 0;
+            border-left: 1px solid #ebebeb;
+            margin-left: 20px;
+        }
+        #category .list-item {
+            display: inherit !important;
+        }
+        .sub-category li{
+
+        }
     </style>
 @endsection
 
@@ -72,28 +85,17 @@
                     
                     <div class="col-xl-9">
                         <div class="tf-shop-control">
-                            <div class="tf-control-filter d-xl-none">
-                                <button type="button" id="filterShop" class="tf-btn-filter">
-                                    <span class="icon icon-filter"></span><span class="text">Filter</span>
-                                </button>
-                            </div>
-
-                            <div class="meta-filter-shop active" style="">
-                                <div id="product-count-grid" class="count-text"><span class="count">12</span> Products found</div>
-                                <div id="applied-filters"><span class="filter-tag remove-tag"><span class="icon icon-close"></span>Price: $0 - $458</span></div>
-                                <button id="remove-all" class="remove-all-filters" style="">
-                                    <i class="icon icon-close"></i>
-                                    Clear all</button>
-                            </div>
-
+                            @include('frontend.pages.shop.filter-tags')
                             <div class="tf-control-sorting">
                                 <p class="h6 d-none d-lg-block">Sort by:</p>
                                 <div class="custom-select">
                                     <select id="input-sort">
-                                        <option value="" {{ request('sort') == '' ? 'selected' : '' }}>Sorting..</option>
-                                        <option value="best_selling" {{ request('sort') == 'best_selling' ? 'selected' : '' }}>Best Selling</option>
-                                        <option value="offer_price" {{ request('sort') == 'offer_price' ? 'selected' : '' }}>Price, low to high</option>
-                                        <option value="offer_price_desc" {{ request('sort') == 'offer_price_desc' ? 'selected' : '' }}>Price, high to low</option>
+                                        <option value="" {{ request('sort')=='' ? 'selected' : '' }}>Sorting..</option>
+                                        <option value="best_selling" {{ request('sort')=='best_selling' ? 'selected' : '' }}>Best Selling</option>
+                                        <option value="offer_price" {{ request('sort')=='offer_price' ? 'selected' : '' }}>Price, low to high
+                                        </option>
+                                        <option value="offer_price_desc" {{ request('sort')=='offer_price_desc' ? 'selected' : '' }}>Price, high to
+                                            low</option>
                                     </select>
 
                                 </div>

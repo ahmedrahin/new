@@ -36,6 +36,9 @@
         <select name="brand_id" data-control="select2" class="form-select form-select-solid mb-5"
             data-placeholder="Select a brand" data-allow-clear="true">
             <option></option>
+            @foreach ($brands as $brand)
+                <option value="{{ $brand->id }}" {{ $brand->id == $product->brand_id ? 'selected' : '' }}>{{ $brand->name }}</option>
+            @endforeach
         </select>
         <span id="brand_id" class="text-danger"></span>
 
@@ -143,11 +146,6 @@
         // Populate Subcategories
         updateSelectOptions(selectedCategoryId, '#subcategory_id_item', '/admin/get-subcategories/', function () {
             $('#subcategory_id_item').val(selectedSubcategoryId).trigger('change');
-        });
-
-        // Populate Brands
-        updateSelectOptions(selectedCategoryId, 'select[name="brand_id"]', '/admin/get-brand/', function () {
-            $('select[name="brand_id"]').val(selectedBrandId).trigger('change');
         });
     }
 

@@ -1,40 +1,6 @@
 (function($) {
     "use strict";
 
-    /* Range Two Price
-  -------------------------------------------------------------------------------------*/
-    var rangeTwoPrice = function() {
-        if ($("#rang-slider").length > 0) {
-            var skipSlider = document.getElementById("rang-slider");
-            var skipValues = [document.getElementById("price-min-value"), document.getElementById("price-max-value")];
-
-            var min = parseInt(skipSlider.getAttribute("data-min"), 10) || 0;
-            var max = parseInt(skipSlider.getAttribute("data-max"), 10) || 5000;
-
-            noUiSlider.create(skipSlider, {
-                start: [min, max],
-                connect: true,
-                step: 1,
-                range: {
-                    min: min,
-                    max: max,
-                },
-                format: {
-                    from: function(value) {
-                        return parseInt(value, 10);
-                    },
-                    to: function(value) {
-                        return parseInt(value, 10);
-                    },
-                },
-            });
-
-            skipSlider.noUiSlider.on("update", function(val, e) {
-                skipValues[e].innerText = val[e];
-            });
-        }
-    };
-
     /* Switch Layout 
   -------------------------------------------------------------------------------------*/
     var swLayoutShop = function() {
@@ -331,7 +297,6 @@
         
     };
     $(function() {
-        rangeTwoPrice();
         swLayoutShop();
         loadProduct();
         handleDropdownFilter();

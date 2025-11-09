@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\Brand;
 use App\Models\Subsubcategory;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\FilterOption;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
 
 class ShopController extends Controller
 {
@@ -20,10 +20,15 @@ class ShopController extends Controller
         [$products, $perPage, $from, $to] = $this->getFilteredProducts($request, $query);
 
         if ($request->ajax()) {
+            if ($request->has('get_tags_only')) {
+                return view('frontend.partials.filter-tags', compact('products', 'from', 'to'))->render();
+            }
             return view('frontend.pages.shop.product-list', compact('products'))->render();
         }
 
-        return view('frontend.pages.shop.shop', compact('products', 'perPage', 'from', 'to'));
+        $brands = Brand::where('status', 1)->get();
+
+        return view('frontend.pages.shop.shop', compact('products', 'perPage', 'from', 'to', 'brands'));
     }
 
     private function getFilteredProducts(Request $request, $query)
@@ -128,7 +133,9 @@ class ShopController extends Controller
             return view('frontend.pages.shop.product-list', compact('products'))->render();
         }
 
-        return view('frontend.pages.shop.category-product', compact('category', 'products', 'perPage', 'from', 'to', 'filters'));
+        $brands = Brand::where('status', 1)->get();
+
+        return view('frontend.pages.shop.category-product', compact('category', 'products', 'perPage', 'from', 'to', 'filters', 'brands'));
     }
 
 

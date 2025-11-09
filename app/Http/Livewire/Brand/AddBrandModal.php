@@ -149,7 +149,7 @@ class AddBrandModal extends Component
 
         $brand->name = $this->name;
         $brand->status = $this->status;
-        $brand->category_id = $this->category_id ?? null;
+        $brand->category_id = !empty($this->category_id) ? $this->category_id : null;
 
         if ($this->logo) {
             if ($brand->image) {

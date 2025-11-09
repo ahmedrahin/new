@@ -95,19 +95,10 @@
                                 <div class="price-val" id="price-max-value" data-currency="$"></div>
                             </div>
                         </div>
-
-                        <div class="collapse-body widget-price filter-price">
-                            
-                        <div class="price-filter ws-box">
-                            <div class="range-label from">
-                                <input type="text" id="range-from" name="from" value="{{ $from ?? 0 }}">
-                            </div>
-
-                            <div class="range-label to">
-                                <input type="text" id="range-to" name="to" value="{{ $to ?? 5000 }}">
-                            </div>
+                        <div style="display: none;">
+                            <input type="hidden" id="range-from" name="from" value="{{ $from ?? 0 }}">
+                            <input type="hidden" id="range-to" name="to" value="{{ $to ?? 5000 }}">
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -118,15 +109,48 @@
                     <span class="h4 fw-semibold">Brand</span>
                     <span class="icon icon-caret-down fs-20"></span>
                 </div>
+                
                 <div id="brand" class="collapse show">
                     <ul class="collapse-body filter-group-check current-scrollbar">
-                        <li class="list-item">
-                            <input type="checkbox" name="brand" class="tf-check" id="automet">
-                            <label for="automet" class="label">AUTOMET</label>
-                        </li>
+                        @foreach ($brands as $brand)
+                            <li class="list-item">
+                                 @php
+                                    $isChecked = request()->filled('filter') && in_array("brand:$brand->id", request()->filter ?? []);
+                                @endphp
+                                <input type="checkbox" name="filter[]" class="tf-check" id="{{ $brand->name }}" value="brand:{{ $brand->id }}" {{ $isChecked ? 'checked' : '' }}>
+                                <label for="{{ $brand->name }}" class="label">{{ $brand->name }}</label>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
+
+            @if(!empty($filters))
+                 @foreach ($filters as $filter)
+                  <div class="widget-facet">
+                    <div class="facet-title" data-bs-target="#{{ $filter->option_name }}" role="button" data-bs-toggle="collapse" aria-expanded="true"
+                        aria-controls="{{ $filter->option_name }}">
+                        <span class="h4 fw-semibold">{{ $filter->option_name }}</span>
+                        <span class="icon icon-caret-down fs-20"></span>
+                    </div>
+
+                    <div id="{{ $filter->option_name }}" class="collapse show">
+                        <ul class="collapse-body filter-group-check current-scrollbar">
+                            @foreach ($filter->values as $value)
+                                <li class="list-item">
+                                    @php
+                                        $filterKey = $filter->id . ':' . $value->id;
+                                        $isChecked = request()->filled('filter') && in_array($filterKey, request()->filter ?? []);
+                                    @endphp
+                                    <input type="checkbox" name="filter[]" class="tf-check" id="{{ $value->option_value }}" value="{{ $filterKey }}" {{ $isChecked ? 'checked' : '' }}>
+                                    <label for="{{ $value->option_value }}" class="label">{{ $value->option_value }}</label>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                  </div>
+                @endforeach
+            @endif
             
         </div>
         <div class="canvas-bottom d-xl-none">
@@ -251,20 +275,35 @@
             let inputFrom = document.getElementById('range-from');
             let inputTo = document.getElementById('range-to');
 
-            // Create slider
-            noUiSlider.create(slider, {
-                start: [slider.dataset.from, slider.dataset.to],
-                connect: true,
-                range: {
-                    'min': parseInt(slider.dataset.min),
-                    'max': parseInt(slider.dataset.max)
-                }
-            });
+            let skipValues = [
+                document.getElementById("price-min-value"),
+                document.getElementById("price-max-value")
+            ];
+
+            // Create slider only if not initialized
+            if (!slider.noUiSlider) {
+                noUiSlider.create(slider, {
+                    start: [from, to],
+                    connect: true,
+                    step: 1,
+                    range: {
+                        min: min,
+                        max: max
+                    }
+                });
+            }
 
             slider.noUiSlider.on('update', function(values) {
-                document.getElementById('range-from').value = Math.round(values[0]);
-                document.getElementById('range-to').value = Math.round(values[1]);
+                let val0 = Math.round(values[0]);
+                let val1 = Math.round(values[1]);
+
+                if (skipValues[0]) skipValues[0].innerText = val0;
+                if (skipValues[1]) skipValues[1].innerText = val1;
+
+                if (inputFrom) inputFrom.value = val0;
+                if (inputTo) inputTo.value = val1;
             });
+
 
             // User types in FROM input
             inputFrom.addEventListener('change', function() {
@@ -343,5 +382,7 @@
             });
         });
     </script>
+
+    
     
 @endpush

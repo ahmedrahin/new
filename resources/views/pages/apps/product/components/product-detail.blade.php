@@ -31,6 +31,9 @@
         <label class="form-label">Brand</label>
         <select name="brand_id" data-control="select2" class="form-select form-select-solid mb-5" data-placeholder="Select a brand" data-allow-clear="true">
             <option></option>
+            @foreach ($brands as $brand)
+                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+            @endforeach
         </select>
         <span id="brand_id" class="text-danger"></span>
 
@@ -103,9 +106,6 @@
             updateSelectOptions(categoryId, '#subcategory_id_item', '/admin/get-subcategories/', function() {
                 $('#subcategory_id').trigger('change');
             });
-
-            // Update brands
-            updateSelectOptions(categoryId, 'select[name="brand_id"]', '/admin/get-brand/');
         });
 
         // Event listener for when the subcategory selection changes
