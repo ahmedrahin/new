@@ -81,6 +81,11 @@ input:focus, select:focus, textarea:focus{
     display: none;
 }
 
+.tf-mini-cart-bottom {
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+}
+
 @media screen and (max-width: 800px) {
 
     .for-dekstop{

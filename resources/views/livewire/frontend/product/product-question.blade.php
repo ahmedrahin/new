@@ -6,7 +6,7 @@
                 <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
             </div>
             @if(auth()->check())
-                <form class="form-ask" wire:submit.prevent="submit">
+                <form class="form-ask mb-0" wire:submit.prevent="submit">
                     <div class="form_content" style="gap:10px;">
                         <textarea placeholder="Message" wire:model="question" style="height: 180px;" class="@error('question') error_border @enderror" ></textarea>
                         @error('question')

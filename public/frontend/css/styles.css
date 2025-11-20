@@ -11464,7 +11464,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .tf-product-info-wrap .tf-product-variant {
   display: grid;
-  gap: 32px;
+  gap: 20px;
   margin-bottom: 32px;
 }
 .tf-product-info-wrap .tf-product-variant .variant-picker-label {
