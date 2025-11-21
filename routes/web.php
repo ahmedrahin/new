@@ -62,22 +62,6 @@ Route::get('/success-order/{order_id}', function ($order_id) {
     return view('frontend.pages.order.success', compact('order'));
 })->name('success.order');
 
-// ssl commerze
-Route::prefix('sslcommerz')->name('sslcommerz.')->controller(SSLCommerzController::class)->group(function () {
-    Route::get('/payment/redirect', 'redirect')->name('redirect');
-    Route::post('/success', 'success')->name('success');
-    Route::post('/fail', 'fail')->name('fail');
-    Route::post('/cancel', 'cancel')->name('cancel');
-});
-
-// bkash
-Route::prefix('bkash')->name('bkash.')->controller(BkashPaymentController::class)->group(function () {
-    Route::get('/payment', 'index')->name('index');
-    Route::post('/create', 'createPayment')->name('create');
-    Route::post('/execute', 'executePayment')->name('execute');
-    Route::get('/success', 'success')->name('success');
-    Route::get('/fail', 'fail')->name('fail');
-});
 
 // order invoice download pdf
 Route::get('/order-invoice/{order_id}', [OrderController::class, 'downloadInvoice'])->name('order.invoice.pdf');

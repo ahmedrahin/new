@@ -1,220 +1,203 @@
-<div>
-
-    <section class="checkout bg-bt-gray p-tb-15">
-        <div class="container">
-            <h1 class="page-title">Checkout</h1>
-
-            <form class="checkout-content" wire:submit.prevent="order">
-                <div class="row">
-                    {{-- Left: Customer Info --}}
-                    <div class="col-md-4 col-sm-12">
-                        <div class="page-section ws-box">
-                            <div class="section-head">
-                                <h2><span>1</span>Customer Information</h2>
+<section class="flat-spacing">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="tf-page-checkout mb-lg-0">
+                    <!-- Coupon Section -->
+                    <div class="wrap-coupon">
+                        <h5 class="mb-12">Have a coupon? <span class="text-primary">Enter your code</span></h5>
+                        <form>
+                            <div class="ip-discount-code mb-0">
+                                @if (empty($appliedCoupon))
+                                    <input type="text" placeholder="Enter your code" wire:model="couponCode">
+                                    <button class="tf-btn animate-btn" type="button" wire:click="applyCoupon">
+                                        <span wire:loading.remove wire:target="applyCoupon">Apply Code</span>
+                                        <span wire:loading wire:target="applyCoupon" class="formloader"></span>
+                                    </button>
+                                @else
+                                    <input type="text" value="{{ $appliedCoupon['code'] }}" readonly>
+                                    <button class="tf-btn animate-btn" type="button" wire:click="removeCoupon">
+                                        <span wire:loading.remove wire:target="removeCoupon">Cancel</span>
+                                        <span wire:loading wire:target="removeCoupon" class="formloader"></span>
+                                    </button>
+                                @endif
                             </div>
-                            <div class="address">
-                                <div class="form-group">
-                                    <label>Full Name</label>
-                                    <input type="text" class="form-control @error('name') error-border @enderror" wire:model="name" placeholder="Full Name*">
-                                    @error('name') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Mobile</label>
-                                    <input type="text" class="form-control @error('phone') error-border @enderror" wire:model="phone" placeholder="Phone*">
-                                    @error('phone') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" class="form-control @error('email') error-border @enderror" wire:model="email" placeholder="Email*">
-                                    @error('email') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <input type="text" class="form-control @error('shipping_address') error-border @enderror" wire:model="shipping_address"
-                                        placeholder="Address*">
-                                    @error('shipping_address') <div class="text-danger">{{ $message }}</div> @enderror
-                                </div>
-
-                                <div class="multiple-form-group">
-                                    <div class="form-group">
-                                        <label>City</label>
-                                        <select wire:model="district_id" class="form-control @error('district_id') error-border @enderror">
-                                            <option value="">Select City</option>
-                                            @foreach ($districts as $district)
-                                                <option value="{{ $district->id }}">{{ $district->name }} - {{ $district->bn_name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('district_id') <div class="text-danger">{{ $message }}</div> @enderror
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Order Note</label>
-                                    <textarea class="form-control" rows="5" wire:model="note"
-                                        placeholder="Notes about your order..."></textarea>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
 
-                    {{-- Right: Payment, Delivery, Coupon, Summary --}}
-                    <div class="col-md-8 col-sm-12">
-                        <div class="row row-payment-delivery-order">
+                    <!-- Main Checkout Form -->
+                    <form class="tf-checkout-cart-main" wire:submit.prevent="order">
+                        <!-- Customer Information -->
+                        <div class="box-ip-checkout estimate-shipping">
+                            <h2 class="title type-semibold">Customer Information</h2>
+                            <div class="form_content">
+                                <div class="cols tf-grid-layout sm-col-2">
+                                    <fieldset>
+                                        <input type="text" placeholder="Full Name*" wire:model="name" 
+                                               class="@error('name') error-border @enderror">
+                                        @error('name') <div class="text-danger small">{{ $message }}</div> @enderror
+                                    </fieldset>
+                                    <fieldset>
+                                        <input type="text" placeholder="Phone*" wire:model="phone"
+                                               class="@error('phone') error-border @enderror">
+                                        @error('phone') <div class="text-danger small">{{ $message }}</div> @enderror
+                                    </fieldset>
+                                </div>
+                                <div class="cols tf-grid-layout sm-col-2">
+                                    <fieldset>
+                                        <input type="email" placeholder="Email*" wire:model="email"
+                                               class="@error('email') error-border @enderror">
+                                        @error('email') <div class="text-danger small">{{ $message }}</div> @enderror
+                                    </fieldset>
+                                    <fieldset>
+                                        <input type="text" placeholder="Address*" wire:model="shipping_address"
+                                               class="@error('shipping_address') error-border @enderror">
+                                        @error('shipping_address') <div class="text-danger small">{{ $message }}</div> @enderror
+                                    </fieldset>
+                                </div>
 
-                            {{-- Payment Method --}}
-                            <div class="col-md-6 col-sm-12 payment-methods">
-                                <div class="page-section ws-box">
-                                    <div class="section-head">
-                                        <h2><span>2</span>Payment Method</h2>
-                                    </div>
-                                    <p>Select a payment method</p>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="payment_type" wire:model="payment_type" value="cod"> Cash on Delivery
+                                <div class="cols tf-grid-layout sm-col-2">
+                                    <fieldset>
+                                        <div class="tf-select">
+                                            <select wire:model="district_id" 
+                                                    class="@error('district_id') error-border @enderror">
+                                                <option value="">Select City</option>
+                                                @foreach ($districts as $district)
+                                                    <option value="{{ $district->id }}">
+                                                        {{ $district->name }} - {{ $district->bn_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('district_id') <div class="text-danger small">{{ $message }}</div> @enderror
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <input type="text" placeholder="Postal code">
+                                    </fieldset>
+                                </div>
+                                <textarea placeholder="Note about your order" style="height: 180px;" 
+                                          wire:model="note"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="box-ip-payment">
+                            <h2 class="title type-semibold">Choose Payment Option</h2>
+                            <div class="payment-method-box" id="payment-method-box">
+                                <div class="payment_accordion">
+                                    <label for="cash-on" class="payment_check checkbox-wrap">
+                                        <input type="radio" name="payment-method" class="tf-check-rounded style-2" 
+                                               id="cash-on" wire:model="payment_type" value="cod">
+                                        <span class="pay-title">Cash On Delivery</span>
                                     </label>
-                                    
-                                </div>
-                            </div>
-
-                            {{-- Shipping Method --}}
-                            <div class="col-md-6 col-sm-12 delivery-methods">
-                                <div class="page-section ws-box">
-                                    <div class="section-head">
-                                        <h2><span>3</span>Delivery Method</h2>
-                                    </div>
-                                    <p>Select a delivery method</p>
-                                    @foreach ($shippingMethods as $method)
-                                        <label class="radio-inline" style="display: block;margin-bottom:10px;">
-                                            <input type="radio" wire:model="selectedShippingMethodId"
-                                                value="{{ $method->id }}">
-                                            {{ $method->provider_name }} - ৳{{ $method->provider_charge }}
-                                        </label>
-                                    @endforeach
-                                    <br>
-                                    @if ($selectedShippingCharge)
-                                        <div class="mt-2">
-                                            <strong>Shipping (+): ৳{{ $selectedShippingCharge }}</strong>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-
-                            {{-- Coupon Code --}}
-                            <div class="col-md-12 col-sm-12">
-                                <div class="page-section ws-box voucher-coupon">
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12" id="discount-coupon">
-                                            @if (empty($appliedCoupon))
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" wire:model="couponCode"
-                                                        placeholder="Promo / Coupon Code" />
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn st-outline btncouopn"
-                                                            wire:click="applyCoupon">
-                                                            <span wire:loading.remove wire:target="applyCoupon">Apply</span>
-                                                            <span wire:loading wire:target="applyCoupon" class="formloader"></span>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            @else
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control"
-                                                        value="{{ $appliedCoupon['code'] }}" readonly>
-                                                    <span class="input-group-btn">
-                                                        <button type="button" class="btn st-outline btncouopn"
-                                                            wire:click="removeCoupon">
-                                                            <span wire:loading.remove wire:target="removeCoupon">Cancel</span>
-                                                            <span wire:loading wire:target="removeCoupon" class="formloader"></span>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- Order Overview --}}
-                            <div class="col-md-12 col-sm-12 details-section-wrap">
-                                <div class="page-section ws-box">
-                                    <div class="section-head">
-                                        <h2><span>4</span>Order Overview</h2>
-                                    </div>
-                                    <table class="table-bordered bg-white checkout-data">
-                                        <thead>
-                                            <tr>
-                                                <td>Product Name</td>
-                                                <td>Price</td>
-                                                <td class="text-right">Total</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($cart as $item)
-                                                <tr>
-                                                    <td class="name">
-                                                        <a href="{{ route('product-details', $item['slug']) }}">
-                                                            {{ $item['name'] }}
-                                                        </a>
-                                                        @if (!empty($item['attributes_info']))
-                                                            <br>
-                                                            @foreach ($item['attributes_info'] as $attr)
-                                                                <small>{{ $attr['name'] }}: {{ $attr['value'] }} @if(!$loop->last) -@endif</small>
-                                                            @endforeach
-                                                        @endif
-                                                    </td>
-                                                    <td class="price">৳{{ format_price($item['offer_price'],0) }} x {{ $item['quantity'] }}</td>
-                                                    <td class="price text-right">৳{{ format_price($item['offer_price'] * $item['quantity']) }}</td>
-                                                </tr>
-                                            @endforeach
-
-                                            <tr class="total">
-                                                <td colspan="2" class="text-right"><strong>Sub-Total:</strong></td>
-                                                <td class="text-right">৳{{ format_price($this->getTotalAmount(), 0) }}</td>
-                                            </tr>
-
-                                            @if (!empty($appliedCoupon))
-                                                <tr class="total">
-                                                    <td colspan="2" class="text-right"><strong>Coupon Discount:</strong></td>
-                                                    <td class="text-right" style="color:#ef4a23;">-৳{{ $appliedCoupon['discount'] }}</td>
-                                                </tr>
-                                            @endif
-
-                                            @if ($selectedShippingCharge)
-                                                <tr class="total">
-                                                    <td colspan="2" class="text-right"><strong>Shipping Charge:</strong></td>
-                                                    <td class="text-right">৳{{ $selectedShippingCharge }}</td>
-                                                </tr>
-                                            @endif
-
-                                            <tr class="total">
-                                                <td colspan="2" class="text-right"><strong>Total:</strong></td>
-                                                <td class="text-right" style="color:#ef4a23;"><strong>৳{{ number_format($this->grandTotal(), 0) }}</strong></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                {{-- Final Button & Terms --}}
-                <div class="checkout-final-action mt-4">
-                    <div class="agree-text mb-2">
-                        I have read and agree to the
-                        <a href="{{ route('terms') }}" target="_blank"><b>Terms & Conditions</b></a>,
-                        <a href="{{ route('privacy.policy') }}" target="_blank"><b>Privacy Policy</b></a>,
-                        and <a href="{{ route('refund.policy') }}" target="_blank"><b>Refund Policy</b></a>
-                        <input type="checkbox" name="agree" checked>
-                    </div>
-                    <button type="submit" class="btn btn-dark pull-right btncouopn">
-                        <span wire:loading.remove wire:target="order">Confirm Order</span>
-                        <span wire:loading wire:target="order" class="formloader"></span>
-                    </button>
+                        <!-- Shipping Method -->
+                        <div class="box-ip-shipping">
+                            <h2 class="title type-semibold">Shipping Method</h2>
+                            @foreach ($shippingMethods as $method)
+                                <label for="shipping-{{ $method->id }}" class="check-ship mb-12">
+                                    <input type="radio" id="shipping-{{ $method->id }}" 
+                                           class="tf-check-rounded style-2 line-black"
+                                           wire:model="selectedShippingMethodId" value="{{ $method->id }}">
+                                    <span class="text h6">
+                                        <span class="">{{ $method->provider_name }}</span>
+                                        <span class="price">৳{{ $method->provider_charge }}</span>
+                                    </span>
+                                </label>
+                            @endforeach
+                            @if ($selectedShippingCharge)
+                                <div class="mt-2">
+                                    <strong>Shipping Charge: ৳{{ $selectedShippingCharge }}</strong>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Terms & Submit -->
+                        <div class="agree-text mb-3">
+                            <label class="checkbox-wrap">
+                                <input type="checkbox" name="agree" checked>
+                                <span class="checkmark"></span>
+                                I have read and agree to the
+                                <a href="{{ route('terms') }}" target="_blank"><b>Terms & Conditions</b></a>,
+                                <a href="{{ route('privacy.policy') }}" target="_blank"><b>Privacy Policy</b></a>,
+                                and <a href="{{ route('refund.policy') }}" target="_blank"><b>Refund Policy</b></a>
+                            </label>
+                        </div>
+
+                        <div class="button_submit">
+                            <button type="submit" class="tf-btn animate-btn w-100">
+                                <span wire:loading.remove wire:target="order">Confirm Order</span>
+                                <span wire:loading wire:target="order" class="formloader">Processing...</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="col-lg-5">
+                <div class="fl-sidebar-cart sticky-top">
+                    <div class="box-your-order">
+                        <h2 class="title type-semibold">Your Order</h2>
+                        <ul class="list-order-product">
+                            @foreach ($cart as $item)
+                                <li class="order-item">
+                                    <a href="{{ route('product-details', $item['slug']) }}" class="img-prd">
+                                        <img class="lazyload" src="{{ asset($item['image_url']) }}" 
+                                             data-src="{{ asset($item['image_url']) }}" alt="{{ $item['name'] }}">
+                                    </a>
+                                    <div class="infor-prd">
+                                        <h6 class="prd_name">
+                                            <a href="{{ route('product-details', $item['slug']) }}" class="link">
+                                                {{ $item['name'] }}
+                                            </a>
+                                        </h6>
+                                        @if (!empty($item['attributes_info']))
+                                            <div class="prd_select text-small">
+                                                @foreach ($item['attributes_info'] as $attr)
+                                                    {{ $attr['name'] }}: {{ $attr['value'] }}
+                                                    @if(!$loop->last) | @endif
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                        <div class="quantity">Qty: {{ $item['quantity'] }}</div>
+                                    </div>
+                                    <p class="price-prd h6">
+                                        ৳{{ format_price($item['offer_price'] * $item['quantity']) }}
+                                    </p>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <ul class="list-total">
+                            <li class="total-item h6">
+                                <span class="fw-bold text-black">Subtotal</span>
+                                <span>৳{{ format_price($this->getTotalAmount(), 0) }}</span>
+                            </li>
+                            
+                            @if (!empty($appliedCoupon))
+                                <li class="total-item h6">
+                                    <span class="fw-bold text-black">Coupon Discount</span>
+                                    <span style="color:#ef4a23;">-৳{{ $appliedCoupon['discount'] }}</span>
+                                </li>
+                            @endif
+
+                            @if ($selectedShippingCharge)
+                                <li class="total-item h6">
+                                    <span class="fw-bold text-black">Shipping</span>
+                                    <span>৳{{ $selectedShippingCharge }}</span>
+                                </li>
+                            @endif
+                        </ul>
+                        <div class="last-total h5 fw-medium text-black">
+                            <span>Total</span>
+                            <span>৳{{ number_format($this->grandTotal(), 0) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

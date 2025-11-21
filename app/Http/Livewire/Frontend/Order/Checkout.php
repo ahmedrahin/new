@@ -333,47 +333,6 @@ class Checkout extends Component
             return redirect()->route('success.order', ['order_id' => $orderId]);
         }
 
-        if ($this->payment_type === 'bkash') {
-            session()->put('bkash_payment_data', [
-                'order_id' => $orderId,
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'shipping_address' => $this->shipping_address,
-                'district_id' => $this->district_id,
-                'user_id' => Auth::id(),
-                'shipping_method_id' => $this->selectedShippingMethodId,
-                'shipping_charge' => $this->selectedShippingCharge,
-                'cart' => session()->get('cart'),
-                'coupon' => $this->appliedCoupon,
-                'note' => $this->note,
-                'grand_total' => $this->grandTotal(),
-                'subtotal'  => $this->getTotalAmount(),
-            ]);
-        
-            return redirect()->route('bkash.index');
-        }        
-
-        if ($this->payment_type === 'sslcommerz') {
-            return redirect()->route('sslcommerz.redirect')->with('ssl_payment_data', [
-                'order_id' => $orderId,
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'shipping_address' => $this->shipping_address,
-                'district_id' => $this->district_id,
-                'user_id' => Auth::id(),
-                'shipping_method_id' => $this->selectedShippingMethodId,
-                'shipping_charge' => $this->selectedShippingCharge,
-                'cart' => session()->get('cart'),
-                'coupon' => $this->appliedCoupon,
-                'note' => $this->note,
-                'grand_total' => $this->grandTotal(),
-                'subtotal'  => $this->getTotalAmount(),
-            ]);
-
-        }
-
         $this->emit('error', 'Invalid payment method selected.');
     }
 
