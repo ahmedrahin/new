@@ -1107,7 +1107,7 @@ a:focus, a:hover {
 }
 
 .flat-spacing {
-  padding-top: 112px;
+  padding-top: 90px;
   padding-bottom: 112px;
 }
 @media (max-width: 1024px) {
@@ -7565,7 +7565,7 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   flex-direction: column;
   align-items: start;
-  gap: 8px;
+  gap: 5px;
   flex: 1;
   align-items: stretch;
 }

@@ -20,26 +20,6 @@ if (!function_exists('theme')) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if (!function_exists('formatCurrencyShort')) {
     function formatCurrencyShort($amount): string
     {
