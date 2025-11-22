@@ -12,23 +12,21 @@
 
 @section('body-content')
 
-<section class="after-header p-tb-10">
-    <div class="container">
-        <ul class="breadcrumb">
-            <li><a href="{{ url('/') }}"><i class="material-icons" title="Home">home</i></a></li>
-            <li><a href="">My Wishlist</a></li>
-        </ul>
-    </div>
-</section>
-
-<div class="container ac-layout">
-    
-    <div class="ac-title">
-        <h1>My Wishlist</h1>
-    </div>
+    <section class="s-page-title">
+        <div class="container">
+            <div class="content">
+                <h1 class="title-page">Your Wishlist</h1>
+                <ul class="breadcrumbs-page">
+                    <li><a href="{{ route('homepage') }}" class="h6 link">Home</a></li>
+                    <li class="d-flex"><i class="icon icon-caret-right"></i></li>
+                    <li>
+                        <h6 class="current-page fw-normal">Wishlist</h6>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
     <livewire:frontend.wishlist.wishlist-list  />
-
-</div>
 
 @endsection

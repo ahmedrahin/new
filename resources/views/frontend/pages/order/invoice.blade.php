@@ -48,7 +48,7 @@
                 <img src="{{ config('app.logo') }}" style="width: 140px; margin-bottom: 10px;">
                 <div class="customer-info">
                     <h5>{{ $order->name }}</h5>
-                    <p>{{ $order->shipping_address }}, {{ $order->district->name }}</p>
+                    <p>{{ $order->shipping_address }}, {{ $order->district->name ?? $order->city }}</p>
                     <h4>{{ $order->phone }}</h4>
                 </div>
             </td>

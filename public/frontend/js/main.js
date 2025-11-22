@@ -449,41 +449,6 @@
         }
     };
 
-    /* Add Wishlist
-    -------------------------------------------------------------------------*/
-    var addWishList = function () {
-        $(".btn-add-wishlist, .card-product .wishlist").on("click", function () {
-            let $this = $(this);
-            let icon = $this.find(".icon");
-            let tooltip = $this.find(".tooltip");
-
-            $this.toggleClass("addwishlist");
-
-            if ($this.hasClass("addwishlist")) {
-                icon.removeClass("icon-heart").addClass("icon-trash");
-                tooltip.text("Remove Wishlist");
-            } else {
-                icon.removeClass("icon-trash").addClass("icon-heart");
-                tooltip.text("Add to Wishlist");
-            }
-        });
-        $(".btn-add-wishlist2").on("click", function () {
-            let $this = $(this);
-            let icon = $this.find(".icon");
-            let text = $this.find(".text");
-
-            $this.toggleClass("addwishlist");
-
-            if ($this.hasClass("addwishlist")) {
-                icon.removeClass("icon-heart").addClass("icon-trash");
-                text.text("Remove List");
-            } else {
-                icon.removeClass("icon-trash").addClass("icon-heart");
-                text.text("Add to List");
-            }
-        });
-    };
-
     /* Handle Sidebar Filter 
     -------------------------------------------------------------------------*/
     var handleSidebarFilter = function () {
@@ -666,45 +631,7 @@
         });
     };
 
-    /* Delete Wishlist
-    ----------------------------------------------------------------------------*/
-    var deleteWishList = function () {
-        function checkEmpty() {
-            var $wishlistInner = $(".wrapper-wishlist");
-            var $product = $(".wrapper-wishlist .card-product");
-            var productCount = $(".wrapper-wishlist .card-product").length;
-
-            if (productCount <= 12) {
-                $(".wrapper-wishlist .wd-full").hide();
-                $product.css("display", "flex");
-            } else {
-                $(".wrapper-wishlist .wd-full").show();
-                $product.slice(0, 12).css("display", "flex");
-                $product.slice(12).hide();
-            }
-
-            if (productCount === 0) {
-                $wishlistInner.append(`
-          <div class="tf-wishlist-empty text-center">
-            <p class="text-notice">NO PRODUCTS WERE ADDED TO THE WISHLIST.</p>
-            <a href="index.html" class="tf-btn animate-btn btn-fill btn-back-shop">BACK TO SHOPPING</a>
-          </div>
-        `);
-            } else {
-                $wishlistInner.find(".tf-compare-empty").remove();
-            }
-        }
-
-        $(".wrapper-wishlist .card-product .remove").on("click", function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            $this.closest(".card-product").remove();
-            checkEmpty();
-        });
-
-        checkEmpty();
-    };
-
+    
     /* Click Active 
     -------------------------------------------------------------------------*/
     var clickActive = function () {
@@ -1232,7 +1159,6 @@
         headerFixed();
         dropdownSelect();
         btnQuantity();
-        deleteWishList();
         goTop();
         variantPicker();
         changeValue();
@@ -1245,7 +1171,6 @@
         handleProgress();
         handleFooter();
         infiniteSlide();
-        addWishList();
         handleSidebarFilter();
         estimateShipping();
         textCopy();

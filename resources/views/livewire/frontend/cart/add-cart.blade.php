@@ -32,115 +32,117 @@
         $attributeErrors = $attributeErrors ?? [];
     @endphp
 
-    <div class="tf-product-variant">
-        @php
-            $ordered = [];
-            $colorAttrId = null;
-            foreach ($groupedAttributes as $aid => $vals) {
-                $attr = $attributesList[$aid] ?? null;
-                if (!$attr) continue;
-                if (strtolower($attr->attr_name) === 'color') {
-                    $colorAttrId = $aid;
-                    continue;
-                }
-                $ordered[$aid] = $vals;
-            }
-            if ($colorAttrId) {
-                $ordered[$colorAttrId] = $groupedAttributes[$colorAttrId];
-            }
-        @endphp
-
-        @foreach ($ordered as $attribute_id => $values)
+    @if($productStocks->count() != 0)
+        <div class="tf-product-variant">
             @php
-                $attribute = $attributesList[$attribute_id] ?? null;
-                if (!$attribute) continue;
-                $attrName = $attribute->attr_name;
-                $selectedValue = $selectedAttributes[$attrName] ?? null;
+                $ordered = [];
+                $colorAttrId = null;
+                foreach ($groupedAttributes as $aid => $vals) {
+                    $attr = $attributesList[$aid] ?? null;
+                    if (!$attr) continue;
+                    if (strtolower($attr->attr_name) === 'color') {
+                        $colorAttrId = $aid;
+                        continue;
+                    }
+                    $ordered[$aid] = $vals;
+                }
+                if ($colorAttrId) {
+                    $ordered[$colorAttrId] = $groupedAttributes[$colorAttrId];
+                }
             @endphp
 
-            @if (strtolower($attrName) === 'color')
-                {{-- ================= COLOR DESIGN (exact given markup) ================= --}}
-                <div class="variant-picker-item variant-color">
-                    <div class="variant-picker-label">
-                        <div class="h4 fw-semibold">
-                            Colors
-                            <span class="variant-picker-label-value value-currentColor">{{ $selectedValue ?? '' }}</span>
+            @foreach ($ordered as $attribute_id => $values)
+                @php
+                    $attribute = $attributesList[$attribute_id] ?? null;
+                    if (!$attribute) continue;
+                    $attrName = $attribute->attr_name;
+                    $selectedValue = $selectedAttributes[$attrName] ?? null;
+                @endphp
+
+                @if (strtolower($attrName) === 'color')
+                    {{-- ================= COLOR DESIGN (exact given markup) ================= --}}
+                    <div class="variant-picker-item variant-color">
+                        <div class="variant-picker-label">
+                            <div class="h4 fw-semibold">
+                                Colors
+                                <span class="variant-picker-label-value value-currentColor">{{ $selectedValue ?? '' }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="variant-picker-values">
-                        @foreach ($values as $optionId => $value)
-                            @if ($value)
-                                @php
-                                    // determine background (hex/class/text)
-                                    $bg = $value->option ?? $value->attr_value;
-                                    $imgPath = $valueImageMap[$value->id] ?? null;
-                                    $imgUrl = $imgPath ? asset($imgPath) : null;
-                                    $isActive = ($selectedValue == $value->attr_value);
-                                @endphp
+                        <div class="variant-picker-values">
+                            @foreach ($values as $optionId => $value)
+                                @if ($value)
+                                    @php
+                                        // determine background (hex/class/text)
+                                        $bg = $value->option ?? $value->attr_value;
+                                        $imgPath = $valueImageMap[$value->id] ?? null;
+                                        $imgUrl = $imgPath ? asset($imgPath) : null;
+                                        $isActive = ($selectedValue == $value->attr_value);
+                                    @endphp
 
-                                <div class="hover-tooltip tooltip-bot color-btn {{ $isActive ? 'active' : '' }}"
-                                    data-attribute="{{ $attrName }}"
-                                    data-value="{{ $value->attr_value }}"
-                                    data-image="{{ $imgUrl ?? '' }}"
-                                    @if(method_exists($this, 'emit')) wire:click="$emit('selectAttribute', '{{ $attrName }}', '{{ $value->attr_value }}')" @endif>
-                                    <span class="check-color" style="background: {{ $bg }};"></span>
-                                    <span class="tooltip">{{ $value->attr_value }}</span>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-
-                    @if (!empty($attributeErrors[$attrName]))
-                        <div class="text-danger mt-1">{{ $attributeErrors[$attrName] }}</div>
-                    @endif
-                </div>
-
-            @else
-                {{-- ================= SIZE / OTHER ATTRIBUTES (exact given markup) ================= --}}
-                <div class="variant-picker-item variant-size">
-                    <div class="variant-picker-label">
-                        <div class="h4 fw-semibold">
-                            {{ $attrName }}
-                            <span class="variant-picker-label-value value-currentSize">{{ $selectedValue ?? '' }}</span>
+                                    <div class="hover-tooltip tooltip-bot color-btn {{ $isActive ? 'active' : '' }}"
+                                        data-attribute="{{ $attrName }}"
+                                        data-value="{{ $value->attr_value }}"
+                                        data-image="{{ $imgUrl ?? '' }}"
+                                        @if(method_exists($this, 'emit')) wire:click="$emit('selectAttribute', '{{ $attrName }}', '{{ $value->attr_value }}')" @endif>
+                                        <span class="check-color" style="background: {{ $bg }};"></span>
+                                        <span class="tooltip">{{ $value->attr_value }}</span>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
-                        {{-- optional: keep size-guide only for Size attribute --}}
-                        @if (strtolower($attrName) === 'size')
-                            <a href="#size-guide" data-bs-toggle="modal" class="size-guide link h6 fw-medium">
-                                <i class="icon icon-ruler"></i>
-                                Size Guide
-                            </a>
+
+                        @if (!empty($attributeErrors[$attrName]))
+                            <div class="text-danger mt-1">{{ $attributeErrors[$attrName] }}</div>
                         @endif
                     </div>
 
-                    <div class="variant-picker-values">
-                        @foreach ($values as $optionId => $value)
-                            @if ($value)
-                                @php
-                                    $imgPath = $valueImageMap[$value->id] ?? null;
-                                    $imgUrl = $imgPath ? asset($imgPath) : null;
-                                    $isActive = ($selectedValue == $value->attr_value);
-                                @endphp
-
-                                <span class="size-btn {{ $isActive ? 'active' : '' }}"
-                                    data-attribute="{{ $attrName }}"
-                                    data-value="{{ $value->attr_value }}"
-                                    data-image="{{ $imgUrl ?? '' }}"
-                                    @if(method_exists($this, 'emit')) wire:click="$emit('selectAttribute', '{{ $attrName }}', '{{ $value->attr_value }}')" @endif>
-                                    {{ $value->attr_value }}
-                                </span>
+                @else
+                    {{-- ================= SIZE / OTHER ATTRIBUTES (exact given markup) ================= --}}
+                    <div class="variant-picker-item variant-size">
+                        <div class="variant-picker-label">
+                            <div class="h4 fw-semibold">
+                                {{ $attrName }}
+                                <span class="variant-picker-label-value value-currentSize">{{ $selectedValue ?? '' }}</span>
+                            </div>
+                            {{-- optional: keep size-guide only for Size attribute --}}
+                            @if (strtolower($attrName) === 'size')
+                                <a href="#size-guide" data-bs-toggle="modal" class="size-guide link h6 fw-medium">
+                                    <i class="icon icon-ruler"></i>
+                                    Size Guide
+                                </a>
                             @endif
-                        @endforeach
+                        </div>
+
+                        <div class="variant-picker-values">
+                            @foreach ($values as $optionId => $value)
+                                @if ($value)
+                                    @php
+                                        $imgPath = $valueImageMap[$value->id] ?? null;
+                                        $imgUrl = $imgPath ? asset($imgPath) : null;
+                                        $isActive = ($selectedValue == $value->attr_value);
+                                    @endphp
+
+                                    <span class="size-btn {{ $isActive ? 'active' : '' }}"
+                                        data-attribute="{{ $attrName }}"
+                                        data-value="{{ $value->attr_value }}"
+                                        data-image="{{ $imgUrl ?? '' }}"
+                                        @if(method_exists($this, 'emit')) wire:click="$emit('selectAttribute', '{{ $attrName }}', '{{ $value->attr_value }}')" @endif>
+                                        {{ $value->attr_value }}
+                                    </span>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        @if (!empty($attributeErrors[$attrName]))
+                            <div class="text-danger mt-1">{{ $attributeErrors[$attrName] }}</div>
+                        @endif
                     </div>
+                @endif
 
-                    @if (!empty($attributeErrors[$attrName]))
-                        <div class="text-danger mt-1">{{ $attributeErrors[$attrName] }}</div>
-                    @endif
-                </div>
-            @endif
-
-        @endforeach
-    </div>
+            @endforeach
+        </div>
+    @endif
 
     <div class="tf-product-total-quantity">
         <div class="group-btn">
@@ -174,19 +176,19 @@
                     Up Coming
                 </button>
             @else
-                <button class="tf-btn animate-btn btn-add-to-cart" wire:click="addToCart">
-                    <span wire:loading.remove wire:target="addToCart">ADD TO CART</span>
-                    <span wire:loading wire:target="addToCart" class="formloader"></span>
-                </button>
+                <div class="btnBuy d-flex gap-2">
+                    <button class="tf-btn animate-btn btn-add-to-cart" wire:click="addToCart">
+                        <span wire:loading.remove wire:target="addToCart">ADD TO CART</span>
+                        <span wire:loading wire:target="addToCart" class="formloader"></span>
+                    </button>
+                    <button class="tf-btn btn-primary">BUY IT NOW</button>
+                </div>
             @endif
 
-            <button type="button" class="hover-tooltip box-icon btn-add-wishlist">
-                <span class="icon icon-heart"></span>
-                <span class="tooltip">Add to Wishlist</span>
-            </button>
+            <livewire:frontend.wishlist.towishlist :productId="$product->id"></livewire>
+            <livewire:frontend.wishlist.add-wishlist></livewire>
         </div>
 
-        <a href="" class="tf-btn btn-primary w-100">BUY IT NOW</a>
     </div>
 
 

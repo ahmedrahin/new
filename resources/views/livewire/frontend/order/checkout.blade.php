@@ -116,7 +116,7 @@
                         </div>
 
                         <!-- Terms & Submit -->
-                        <div class="agree-text mb-3">
+                        {{-- <div class="agree-text mb-3">
                             <label class="checkbox-wrap">
                                 <input type="checkbox" name="agree" checked>
                                 <span class="checkmark"></span>
@@ -125,7 +125,7 @@
                                 <a href="{{ route('privacy.policy') }}" target="_blank"><b>Privacy Policy</b></a>,
                                 and <a href="{{ route('refund.policy') }}" target="_blank"><b>Refund Policy</b></a>
                             </label>
-                        </div>
+                        </div> --}}
 
                         <div class="button_submit">
                             <button type="submit" class="tf-btn animate-btn w-100">

@@ -8,7 +8,7 @@ if (!function_exists('numberToWords')) {
         $formatter = new NumberFormatter('en', NumberFormatter::SPELLOUT);
         $words = ucfirst($formatter->format($number));
 
-        return $words . ' TK Only';
+        return $words . '  only';
     }
 }
 
